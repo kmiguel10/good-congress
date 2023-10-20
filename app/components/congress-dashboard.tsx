@@ -5,7 +5,10 @@ import {
   Card,
   CardDescription,
 } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import CardDashboard from "./card-dashboard";
+import PartyTable from "./party-table/page";
 
 type Member = {
   id: string;
@@ -113,43 +116,57 @@ export default async function CongressDashboard() {
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
-        <CardDashboard
-          title="Legislators"
-          body={totalNumber.toString()}
-          subBody="Total Number of legislators"
-        />
-        <CardDashboard
-          title="Democrats"
-          body={democrats.length.toString()}
-          subBody={democratStatus}
-        />
-        <CardDashboard
-          title="Republicans"
-          body={republicans.length.toString()}
-          subBody={republicanStatus}
-        />
-        <CardDashboard
-          title="Bills Passed"
-          body="Number"
-          subBody="Number of bills passed "
-        />
-      </div>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-8">
-        <Card className="col-span-4">
-          <CardHeader>
-            <CardTitle>Democrats</CardTitle>
-          </CardHeader>
-          <CardContent className="pl-2"></CardContent>
-        </Card>
-        <Card className="col-span-4">
-          <CardHeader>
-            <CardTitle>Republicans</CardTitle>
-            <CardDescription>You made 265 sales this month.</CardDescription>
-          </CardHeader>
-          <CardContent></CardContent>
-        </Card>
-      </div>
+      <Tabs defaultValue="overview" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="reports">Reports</TabsTrigger>
+          <TabsTrigger value="notifications">Notifications</TabsTrigger>
+        </TabsList>
+        <TabsContent value="overview" className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
+            <CardDashboard
+              title="Legislators"
+              body={totalNumber.toString()}
+              subBody="Total Number of legislators"
+            />
+            <CardDashboard
+              title="Democrats"
+              body={democrats.length.toString()}
+              subBody={democratStatus}
+            />
+            <CardDashboard
+              title="Republicans"
+              body={republicans.length.toString()}
+              subBody={republicanStatus}
+            />
+            <CardDashboard
+              title="Bills Passed"
+              body="Number"
+              subBody="Number of bills passed "
+            />
+          </div>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-8">
+            <Card className="col-span-4">
+              <CardHeader>
+                <CardTitle>Democrats</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <PartyTable members={democrats} />
+              </CardContent>
+            </Card>
+            <Card className="col-span-4">
+              <CardHeader>
+                <CardTitle>Republicans</CardTitle>
+                {/* <CardDescription>You made 265 sales this month.</CardDescription> */}
+              </CardHeader>
+              <CardContent>
+                <PartyTable members={republicans} />
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
