@@ -10,7 +10,7 @@ export default function Navbar() {
 
   const links = [
     { label: "Congress", href: "/" },
-    { label: "Member", href: "/member" },
+    { label: "Legislators", href: "/legislators" },
     { label: "Bill", href: "/bill" },
   ];
   return (
