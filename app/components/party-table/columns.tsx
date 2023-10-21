@@ -7,7 +7,7 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 //shape of legislator object
 //can use zod schema
 
-export type Member = {
+type Member = {
   id: string;
   title: string;
   short_title: string;
