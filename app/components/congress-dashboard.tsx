@@ -1,75 +1,15 @@
-import {
-  CardHeader,
-  CardTitle,
-  CardContent,
-  Card,
-  CardDescription,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+import {
+  getActiveMembers,
+  getDemocraticMembers,
+  getPartyMajorityMinorityStatus,
+  getRepublicanMembers,
+} from "@/lib/utils";
+import AgeBarChart from "./age-bar-chart";
 import CardDashboard from "./card-dashboard";
 import PartyTable from "./party-table/page";
-
-type Member = {
-  id: string;
-  title: string;
-  short_title: string;
-  api_uri: string;
-  first_name: string;
-  middle_name: string | null;
-  last_name: string;
-  suffix: string | null;
-  date_of_birth: string;
-  gender: string;
-  party: string;
-  leadership_role: string | null;
-  twitter_account: string;
-  facebook_account: string;
-  youtube_account: string | null;
-  govtrack_id: string;
-  cspan_id: string;
-  votesmart_id: string;
-  icpsr_id: string;
-  crp_id: string;
-  google_entity_id: string;
-  fec_candidate_id: string;
-  url: string;
-  rss_url: string;
-  contact_form: string | null;
-  in_office: boolean;
-  cook_pvi: string | null;
-  dw_nominate: string | null;
-  ideal_point: string | null;
-  seniority: string;
-  next_election: string;
-  total_votes: number;
-  missed_votes: number;
-  total_present: number;
-  last_updated: string;
-  ocd_id: string;
-  office: string;
-  phone: string;
-  fax: string | null;
-  state: string;
-  district: string;
-  at_large: boolean;
-  geoid: string;
-  missed_votes_pct: number;
-  votes_with_party_pct: number;
-  votes_against_party_pct: number;
-};
-
-type CongressData = {
-  status: string;
-  copyright: string;
-  results: {
-    congress: string;
-    chamber: string;
-    num_results: number;
-    offset: number;
-    members: Member[];
-  }[];
-};
 
 export default async function CongressDashboard() {
   const response = await fetch(
@@ -83,36 +23,20 @@ export default async function CongressDashboard() {
 
   const data: CongressData = await response.json();
 
-  // need to filter out non-voting delegates
-  // Filter members with in_office set to false
-  const activeMembers: Member[] = data.results[0].members.filter(function (
-    member
-  ) {
-    return member.in_office && member.title !== "Delegate";
-  });
-
-  console.log(activeMembers.length);
-
-  const democrats: Member[] = activeMembers.filter(
-    (member) => member.party === "D"
+  const activeMembers: Member[] = getActiveMembers(data);
+  const democrats: Member[] = getDemocraticMembers(activeMembers);
+  const republicans: Member[] = getRepublicanMembers(activeMembers);
+  const totalActiveMembers: number = activeMembers.length;
+  const republicanStatus: string = getPartyMajorityMinorityStatus(
+    "rep",
+    democrats,
+    republicans
   );
-
-  const republicans: Member[] = activeMembers.filter(
-    (member) => member.party === "R"
+  const democratStatus: string = getPartyMajorityMinorityStatus(
+    "dems",
+    democrats,
+    republicans
   );
-
-  const totalNumber: number = activeMembers.length;
-
-  const partyStatus = (party: string): string => {
-    if (party === "rep") {
-      return republicans.length > democrats.length ? "Majority" : "Minority";
-    } else {
-      return democrats.length > republicans.length ? "Majority" : "Minority";
-    }
-  };
-
-  const republicanStatus: string = partyStatus("rep");
-  const democratStatus: string = partyStatus("dem");
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
@@ -133,7 +57,7 @@ export default async function CongressDashboard() {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
             <CardDashboard
               title="Legislators"
-              body={totalNumber.toString()}
+              body={totalActiveMembers.toString()}
               subBody="Total Number of legislators"
             />
             <CardDashboard
@@ -169,6 +93,14 @@ export default async function CongressDashboard() {
               <CardContent>
                 <PartyTable members={republicans} />
               </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+        <TabsContent value="analytics" className="space-y-4">
+          {/**TODO: will need to fix the layout of the bar chart */}
+          <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-4 lg:grid-cols-8 ">
+            <Card className="col-span-4">
+              <AgeBarChart members={activeMembers} />
             </Card>
           </div>
         </TabsContent>

@@ -61,4 +61,13 @@ declare global {
       members: Member[];
     }[];
   };
+
+  /**
+   * Prop interface for CardDashboard
+   */
+  interface cardProps {
+    title: string;
+    body: string;
+    subBody: string;
+  }
 }
