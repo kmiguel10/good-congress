@@ -1,4 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import {
@@ -100,7 +106,13 @@ export default async function CongressDashboard() {
           {/**TODO: will need to fix the layout of the bar chart */}
           <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-4 lg:grid-cols-8 ">
             <Card className="col-span-4">
-              <AgeBarChart members={activeMembers} />
+              <CardHeader>
+                <CardTitle>Age Distribution</CardTitle>
+                <CardDescription>Put Definition Here</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AgeBarChart members={activeMembers} />
+              </CardContent>
             </Card>
           </div>
         </TabsContent>

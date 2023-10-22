@@ -70,4 +70,11 @@ declare global {
     body: string;
     subBody: string;
   }
+
+  type barChartDataType = {
+    ageRange: string;
+    democrats: number | 0;
+    republicans: number | 0;
+    age: number | 0;
+  };
 }

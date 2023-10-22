@@ -52,3 +52,53 @@ export function getPartyMajorityMinorityStatus(
     return democrats.length > republicans.length ? "Majority" : "Minority";
   }
 }
+
+export default function calculateCongressAgeData(
+  members: Member[],
+  results: barChartDataType[]
+): barChartDataType[] {
+  // if (!members || !Array.isArray(members)) {
+  //   // Handle the case where members is not an array or is null/undefined.
+  //   return results;
+  // }
+  members.forEach((member) => {
+    const birthDate = new Date(member.date_of_birth);
+    const today = new Date();
+    const age = today.getFullYear() - birthDate.getFullYear();
+
+    //Determine the age range based on the age
+    let ageRange: any;
+
+    if (age < 31) {
+      ageRange = "< 31";
+    } else if (age >= 31 && age <= 41) {
+      ageRange = "31 - 41";
+    } else if (age >= 42 && age <= 52) {
+      ageRange = "42 - 52";
+    } else if (age >= 53 && age <= 63) {
+      ageRange = "53 - 63";
+    } else if (age >= 64 && age <= 74) {
+      ageRange = "64 - 74";
+    } else if (age >= 75 && age <= 85) {
+      ageRange = "75 - 85";
+    } else {
+      ageRange = "> 85";
+    }
+
+    //increment the counts for dems and reps
+    if (member.party === "D") {
+      results.find((range) => {
+        if (range.ageRange === ageRange) {
+          range.democrats++;
+        }
+      });
+    } else {
+      results.find((range) => {
+        if (range.ageRange === ageRange) {
+          range.republicans++;
+        }
+      });
+    }
+  });
+  return results;
+}
