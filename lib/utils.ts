@@ -10,10 +10,31 @@ export function cn(...inputs: ClassValue[]) {
  * @param data of type CongressData from the API
  * @returns returns an array of filtered Member[]
  */
-export function getActiveMembers(congress: CongressData): Member[] {
-  return congress.results[0].members.filter(function (member) {
-    return member.in_office && member.title != "Delegate";
-  });
+export function getActiveMembers(
+  congress: CongressData,
+  chamber: number
+): Member[] {
+  if (chamber === 1) {
+    return congress.results[0].members.filter(function (member) {
+      return member.in_office && member.title != "Delegate";
+    });
+  } else if (chamber === 2) {
+    return congress.results[0].members.filter(function (member) {
+      return (
+        member.in_office &&
+        member.title != "Delegate" &&
+        member.short_title === "Rep."
+      );
+    });
+  } else {
+    return congress.results[0].members.filter(function (member) {
+      return (
+        member.in_office &&
+        member.title != "Delegate" &&
+        member.short_title === "Sen."
+      );
+    });
+  }
 }
 
 /**

@@ -1,11 +1,9 @@
+"use client";
+
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import React from "react";
 
-export default async function CardDashboard({
-  title,
-  body,
-  subBody,
-}: cardProps) {
+export default function CardDashboard({ title, body, subBody }: cardProps) {
   return (
     <>
       <Card>

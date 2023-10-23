@@ -1,27 +1,12 @@
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-import {
   getActiveMembers,
-  getAvgAge,
-  getAvgTenure,
   getDemocraticMembers,
-  getPartyMajorityMinorityStatus,
   getRepublicanMembers,
 } from "@/lib/utils";
-import AgeBarChart from "./age-bar-chart";
-import CardDashboard from "./card-dashboard";
-import PartyTable from "./party-table/page";
-import TenureScatterPlot from "./tenure-scatter-chart";
+import CongressPage from "./congress-page";
 
 export default async function CongressDashboard() {
-  const response = await fetch(
+  const responseHouse = await fetch(
     "https://api.propublica.org/congress/v1/118/house/members.json",
     {
       headers: {
@@ -30,127 +15,43 @@ export default async function CongressDashboard() {
     }
   );
 
-  const data: CongressData = await response.json();
+  const responseSenate = await fetch(
+    "https://api.propublica.org/congress/v1/118/senate/members.json",
+    {
+      headers: {
+        "X-API-Key": process.env.PRO_PUBLICA_API_KEY || "",
+      },
+    }
+  );
 
-  const activeMembers: Member[] = getActiveMembers(data);
-  const democrats: Member[] = getDemocraticMembers(activeMembers);
-  const republicans: Member[] = getRepublicanMembers(activeMembers);
-  const totalActiveMembers: number = activeMembers.length;
-  const republicanStatus: string = getPartyMajorityMinorityStatus(
-    "rep",
-    democrats,
-    republicans
-  );
-  const democratStatus: string = getPartyMajorityMinorityStatus(
-    "dems",
-    democrats,
-    republicans
-  );
+  const houseData: CongressData = await responseHouse.json();
+  const senateData: CongressData = await responseSenate.json();
+
+  const combinedCongressData: CongressData = {
+    status: "Combined Data",
+    copyright: "Your Copyright Info",
+    results: [
+      {
+        congress: "118",
+        chamber: "house",
+        num_results:
+          houseData.results[0].num_results + senateData.results[0].num_results,
+        offset: 0,
+        members: [
+          ...houseData.results[0].members,
+          ...senateData.results[0].members,
+        ],
+      },
+    ],
+  };
+
+  // const activeMembers: Member[] = getActiveMembers(combinedCongressData, chamber);
+  // const democrats: Member[] = getDemocraticMembers(activeMembers);
+  // const republicans: Member[] = getRepublicanMembers(activeMembers);
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
-      <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-        <div className="flex items-center space-x-2">
-          <p>All,House,Senate</p>
-        </div>
-      </div>
-      <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
-        </TabsList>
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
-            <CardDashboard
-              title="Legislators"
-              body={totalActiveMembers.toString()}
-              subBody="Total Number of legislators"
-            />
-            <CardDashboard
-              title="Democrats"
-              body={democrats.length.toString()}
-              subBody={democratStatus}
-            />
-            <CardDashboard
-              title="Republicans"
-              body={republicans.length.toString()}
-              subBody={republicanStatus}
-            />
-            <CardDashboard
-              title="Bills Passed"
-              body="Number"
-              subBody="Number of bills passed "
-            />
-          </div>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-8">
-            <Card className="col-span-4">
-              <CardHeader>
-                <CardTitle>Democrats</CardTitle>
-              </CardHeader>
-              <CardContent className="pl-2">
-                <PartyTable members={democrats} />
-              </CardContent>
-            </Card>
-            <Card className="col-span-4">
-              <CardHeader>
-                <CardTitle>Republicans</CardTitle>
-                {/* <CardDescription>You made 265 sales this month.</CardDescription> */}
-              </CardHeader>
-              <CardContent>
-                <PartyTable members={republicans} />
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-        <TabsContent value="analytics" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
-            <CardDashboard
-              title="Avg Age"
-              body={getAvgAge(activeMembers).toString()}
-              subBody="Average age of legislators"
-            />
-            <CardDashboard
-              title="Avg Tenure"
-              body={getAvgTenure(activeMembers).toString()}
-              subBody="Average tenure of legislators"
-            />
-          </div>
-          {/**TODO: will need to fix the layout of the bar chart */}
-          {/**TODO: Create separate components for Card... */}
-          <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-4 lg:grid-cols-8 ">
-            <Card className="col-span-4">
-              <CardHeader>
-                <CardTitle>Age Distribution</CardTitle>
-                <CardDescription>Put Definition Here</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <AgeBarChart members={activeMembers} />
-              </CardContent>
-            </Card>
-            <Card className="col-span-4">
-              <CardHeader>
-                <CardTitle>Tenure</CardTitle>
-                <CardDescription>Years in office</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <TenureScatterPlot members={activeMembers} />
-              </CardContent>
-            </Card>
-            {/* <Card className="col-span-8">
-              <CardHeader>
-                <CardTitle>Tenure</CardTitle>
-                <CardDescription>Years in office</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <TenureScatterPlot members={activeMembers} />
-              </CardContent>
-            </Card> */}
-          </div>
-        </TabsContent>
-      </Tabs>
+      <CongressPage congressData={combinedCongressData} />
     </div>
   );
 }
