@@ -53,7 +53,13 @@ export function getPartyMajorityMinorityStatus(
   }
 }
 
-export default function calculateCongressAgeData(
+/**
+ * Calculates age
+ * @param members
+ * @param results
+ * @returns array of type barChartDataType
+ */
+export function calculateCongressAgeData(
   members: Member[],
   results: barChartDataType[]
 ): barChartDataType[] {
@@ -101,4 +107,50 @@ export default function calculateCongressAgeData(
     }
   });
   return results;
+}
+
+/**
+ *Returns age and years served
+ * @param param0
+ * @returns AgeTenureDataType[]
+ */
+export function getAgeAndTenureData(members: Member[]): AgeTenureDataType[] {
+  const results: AgeTenureDataType[] = [];
+
+  members.forEach((member) => {
+    const birthDate = new Date(member.date_of_birth);
+    const today = new Date();
+    const age = today.getFullYear() - birthDate.getFullYear();
+
+    results.push({
+      id: parseInt(member.id),
+      name: `${member.short_title} ${member.last_name} ${member.state} ${member.party}`,
+      age: age,
+      tenure: parseInt(member.seniority),
+      party: member.party,
+    });
+  });
+
+  return results;
+}
+
+export function getAvgAge(members: Member[]): number {
+  let sumAge: number = 0;
+  members.forEach((member) => {
+    const birthDate = new Date(member.date_of_birth);
+    const today = new Date();
+    const age = today.getFullYear() - birthDate.getFullYear();
+
+    sumAge += age;
+  });
+
+  return Math.round(sumAge / members.length);
+}
+
+export function getAvgTenure(members: Member[]): number {
+  let sumTenure = 0;
+  members.forEach((member) => {
+    sumTenure += parseInt(member.seniority);
+  });
+  return Math.round(sumTenure / members.length);
 }

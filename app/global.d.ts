@@ -77,4 +77,12 @@ declare global {
     republicans: number | 0;
     age: number | 0;
   };
+
+  type AgeTenureDataType = {
+    id: number;
+    name: string;
+    age: number;
+    tenure: number;
+    party: string;
+  };
 }

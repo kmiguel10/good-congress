@@ -1,6 +1,6 @@
 "use client";
 
-import calculateCongressAgeData from "@/lib/utils";
+import { calculateCongressAgeData } from "@/lib/utils";
 import React from "react";
 import {
   BarChart,

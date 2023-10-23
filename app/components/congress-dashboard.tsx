@@ -9,6 +9,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import {
   getActiveMembers,
+  getAvgAge,
+  getAvgTenure,
   getDemocraticMembers,
   getPartyMajorityMinorityStatus,
   getRepublicanMembers,
@@ -16,6 +18,7 @@ import {
 import AgeBarChart from "./age-bar-chart";
 import CardDashboard from "./card-dashboard";
 import PartyTable from "./party-table/page";
+import TenureScatterPlot from "./tenure-scatter-chart";
 
 export default async function CongressDashboard() {
   const response = await fetch(
@@ -103,7 +106,20 @@ export default async function CongressDashboard() {
           </div>
         </TabsContent>
         <TabsContent value="analytics" className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
+            <CardDashboard
+              title="Avg Age"
+              body={getAvgAge(activeMembers).toString()}
+              subBody="Average age of legislators"
+            />
+            <CardDashboard
+              title="Avg Tenure"
+              body={getAvgTenure(activeMembers).toString()}
+              subBody="Average tenure of legislators"
+            />
+          </div>
           {/**TODO: will need to fix the layout of the bar chart */}
+          {/**TODO: Create separate components for Card... */}
           <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-4 lg:grid-cols-8 ">
             <Card className="col-span-4">
               <CardHeader>
@@ -114,6 +130,24 @@ export default async function CongressDashboard() {
                 <AgeBarChart members={activeMembers} />
               </CardContent>
             </Card>
+            <Card className="col-span-4">
+              <CardHeader>
+                <CardTitle>Tenure</CardTitle>
+                <CardDescription>Years in office</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <TenureScatterPlot members={activeMembers} />
+              </CardContent>
+            </Card>
+            {/* <Card className="col-span-8">
+              <CardHeader>
+                <CardTitle>Tenure</CardTitle>
+                <CardDescription>Years in office</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <TenureScatterPlot members={activeMembers} />
+              </CardContent>
+            </Card> */}
           </div>
         </TabsContent>
       </Tabs>
