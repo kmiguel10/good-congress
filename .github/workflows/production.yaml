@@ -1,12 +1,15 @@
 name: Good Congress Production Deployment
 
+env:
+  PRO_PUBLICA_API_KEY: ${{secrets.PRO_PUBLICA_API_KEY}}
+
 on:
   push:
     branches:
       - main
 
 jobs:
-  Deploy-Production:
+  Deploy-Preview:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -14,8 +17,11 @@ jobs:
       - name: Install Vercel CLI
         run: npm install --global vercel
 
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{secrets.PRO_PUBLICA_API_KEY}}
+
       - name: Build Project Artifacts
-        run: vercel build --prod
+        run: vercel build --token=${{secrets.PRO_PUBLICA_API_KEY}}
 
       - name: Deploy Project Artifacts
-        run: vercel deploy --prebuilt --prod
+        run: vercel deploy --prebuilt --token=${{secrets.PRO_PUBLICA_API_KEY}}

@@ -24,8 +24,8 @@ import {
 import { Button } from "@/components/ui/button";
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  columns: ColumnDef<TData, TValue>[] | [];
+  data: TData[] | [];
 }
 
 export function DataTable<TData, TValue>({
@@ -68,7 +68,7 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {table?.getRowModel()?.rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -87,7 +87,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={columns?.length}
                   className="h-24 text-center"
                 >
                   No results.
