@@ -1,0 +1,21 @@
+name: Good Congress Preview Deployment
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  Deploy-Preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel
+
+      - name: Build Project Artifacts
+        run: vercel build
+
+      - name: Deploy Project Artifacts
+        run: vercel deploy --prebuilt
