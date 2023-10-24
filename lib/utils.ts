@@ -55,6 +55,10 @@ export function getRepublicanMembers(activeMembers: Member[]): Member[] {
   return activeMembers.filter((member) => member.party === "R");
 }
 
+export function getIndependentMembers(activeMembers: Member[]): Member[] {
+  return activeMembers.filter((member) => member.party === "ID");
+}
+
 /**
  * Calculates whether a party is in a majority or minority
  * @param party

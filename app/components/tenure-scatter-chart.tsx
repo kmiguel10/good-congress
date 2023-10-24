@@ -19,7 +19,6 @@ const COLORS = [
 
 export default function TenureScatterPlot({ members }: { members: Member[] }) {
   const congressData: AgeTenureDataType[] = getAgeAndTenureData(members);
-  console.log(congressData, "Congress data");
   const getColorForParty = (party: any) => {
     const partyColor = COLORS.find((item) => item.party === party);
     return partyColor ? partyColor.color : "#8884d8"; // Default to a color if party is not found

@@ -1,24 +1,25 @@
 "use client";
 
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getPartyMajorityMinorityStatus } from "@/lib/utils";
 import CardDashboard from "./card-dashboard";
 import PartyTable from "./party-table/page";
-import { getPartyMajorityMinorityStatus } from "@/lib/utils";
 
 interface OverviewProps {
   activeMembers: Member[];
   democrats: Member[];
   republicans: Member[];
+  independents: Member[];
+  chamber: number;
 }
 
 export default function Overview({
   activeMembers,
   democrats,
   republicans,
+  independents,
+  chamber,
 }: OverviewProps) {
-  const [chamber, setChamber] = useState(0);
-
   const totalActiveMembers: number = activeMembers.length;
   const republicanStatus: string = getPartyMajorityMinorityStatus(
     "rep",
@@ -30,6 +31,7 @@ export default function Overview({
     democrats,
     republicans
   );
+
   return (
     <>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
@@ -48,11 +50,21 @@ export default function Overview({
           body={republicans.length.toString()}
           subBody={republicanStatus}
         />
-        <CardDashboard
-          title="Bills Passed"
-          body="Number"
-          subBody="Number of bills passed "
-        />
+        {chamber === 3 && (
+          <CardDashboard
+            title="Independents"
+            body={independents.length.toString()}
+            subBody={republicanStatus}
+          />
+        )}
+
+        {chamber !== 3 && (
+          <CardDashboard
+            title="Bills Passed"
+            body="Number"
+            subBody="Number of bills passed "
+          />
+        )}
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-8">
         <Card className="col-span-4">

@@ -19,6 +19,7 @@ import {
   getAvgAge,
   getAvgTenure,
   getDemocraticMembers,
+  getIndependentMembers,
   getRepublicanMembers,
 } from "@/lib/utils";
 import { useState } from "react";
@@ -40,10 +41,10 @@ export default function CongressPage({ congressData }: Props) {
 
   const democrats: Member[] = getDemocraticMembers(activeMembers);
   const republicans: Member[] = getRepublicanMembers(activeMembers);
+  const independents: Member[] = getIndependentMembers(activeMembers);
 
   const handleChamberChange = (newChamber: any) => {
     setChamber(newChamber);
-    console.log(chamber, "chamber");
   };
 
   return (
@@ -66,6 +67,8 @@ export default function CongressPage({ congressData }: Props) {
             activeMembers={activeMembers}
             democrats={democrats}
             republicans={republicans}
+            independents={independents}
+            chamber={chamber}
           />
         </TabsContent>
         <TabsContent value="analytics" className="space-y-4">
