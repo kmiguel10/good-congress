@@ -1,6 +1,13 @@
-import CongressPage from "./congress-page";
+import React, { useState } from "react";
+import { columns } from "./columns";
+import { DataTable } from "./data-table";
+import {
+  getActiveMembers,
+  getActiveMembersWithoutChamberFilter,
+  getLegislatorTableData,
+} from "@/lib/utils";
 
-export default async function CongressDashboard() {
+export default async function LegislatorsTable() {
   const responseHouse = await fetch(
     "https://api.propublica.org/congress/v1/118/house/members.json",
     {
@@ -40,9 +47,13 @@ export default async function CongressDashboard() {
     ],
   };
 
+  const activeMembers: Member[] =
+    getActiveMembersWithoutChamberFilter(combinedCongressData);
+
+  const data = getLegislatorTableData(activeMembers);
   return (
-    <div className="flex-1 space-y-4 p-8 pt-6">
-      <CongressPage congressData={combinedCongressData} />
+    <div className="container mx-auto py-10">
+      <DataTable columns={columns} data={data} />
     </div>
   );
 }

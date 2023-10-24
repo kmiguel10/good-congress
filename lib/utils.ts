@@ -37,6 +37,14 @@ export function getActiveMembers(
   }
 }
 
+export function getActiveMembersWithoutChamberFilter(
+  congress: CongressData
+): Member[] {
+  return congress.results[0].members.filter(function (member) {
+    return member.in_office && member.title != "Delegate";
+  });
+}
+
 /**
  *Calculates the total active dems
  * @param activeMembers
@@ -178,4 +186,42 @@ export function getAvgTenure(members: Member[]): number {
     sumTenure += parseInt(member.seniority);
   });
   return Math.round(sumTenure / members.length);
+}
+
+export function getChamber(shortTitle: string): string {
+  return shortTitle === "Sen." ? "Senate" : "House";
+}
+
+export function getLegislatorTableData(
+  members: Member[]
+): LegislatorTableDataType[] {
+  let legislatureData: LegislatorTableDataType[] = [];
+
+  members.forEach((member) => {
+    const birthDate = new Date(member.date_of_birth);
+    const today = new Date();
+    const age: number = today.getFullYear() - birthDate.getFullYear();
+    const chamber: string = getChamber(member.short_title);
+
+    return legislatureData.push({
+      id: member.id,
+      name: `${member.short_title} ${member.first_name} ${member.last_name}`,
+      chamber: chamber,
+      age: age,
+      gender: member.gender,
+      party: member.party,
+      leadership_role: member.leadership_role,
+      url: member.url,
+      next_election: member.next_election,
+      seniority: member.seniority,
+      total_votes: member.total_votes,
+      missed_votes: member.missed_votes,
+      total_present: member.total_present,
+      missed_votes_pct: member.missed_votes_pct,
+      votes_with_party_pct: member.votes_with_party_pct,
+      votes_against_party_pct: member.votes_against_party_pct,
+    });
+  });
+
+  return legislatureData;
 }

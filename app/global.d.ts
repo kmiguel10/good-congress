@@ -85,4 +85,23 @@ declare global {
     tenure: number;
     party: string;
   };
+
+  type LegislatorTableDataType = {
+    id: string;
+    name: string;
+    chamber: string;
+    age: number;
+    gender: string;
+    party: string;
+    leadership_role: string | null;
+    url: string;
+    next_election: string;
+    seniority: string | null;
+    total_votes: number;
+    missed_votes: number;
+    total_present: number;
+    missed_votes_pct: number;
+    votes_with_party_pct: number;
+    votes_against_party_pct: number;
+  };
 }
