@@ -1,9 +1,9 @@
 import React from "react";
 
 interface Props {
-  id: string;
+  params: { id: string };
 }
 
-export default function LegislatorInformation({ id }: Props) {
+export default function LegislatorInformation({ params }: Props) {
   return <div>LegislatorInformation</div>;
 }
