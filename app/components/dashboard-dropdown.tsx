@@ -22,7 +22,7 @@ interface DashboardDropdownProps {
 export default function DashboardDropdown({
   onChamberChange,
 }: DashboardDropdownProps) {
-  function handleDropdownChange(e: any) {
+  function handleDropdownChange(e: string) {
     onChamberChange(parseInt(e));
   }
   return (

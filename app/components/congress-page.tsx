@@ -24,12 +24,6 @@ import {
 } from "@/lib/utils";
 import { useState } from "react";
 
-// interface Props {
-//   activeMembers: Member[];
-//   democrats: Member[];
-//   republicans: Member[];
-// }
-
 interface Props {
   congressData: CongressData;
 }
@@ -43,7 +37,7 @@ export default function CongressPage({ congressData }: Props) {
   const republicans: Member[] = getRepublicanMembers(activeMembers);
   const independents: Member[] = getIndependentMembers(activeMembers);
 
-  const handleChamberChange = (newChamber: any) => {
+  const handleChamberChange = (newChamber: number) => {
     setChamber(newChamber);
   };
 
