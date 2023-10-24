@@ -5,11 +5,15 @@ import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export const columns: ColumnDef<LegislatorTableDataType>[] = [
   {
     accessorKey: "name",
     header: "Legislator",
+    cell: ({ row }) => (
+      <Link href={`/legislators/${row.original.id}`}>{row.original.name}</Link>
+    ),
   },
   {
     accessorKey: "chamber",
