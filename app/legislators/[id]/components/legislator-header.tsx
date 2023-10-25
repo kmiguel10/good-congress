@@ -10,8 +10,8 @@ export default function LegislatorHeader({
     <div>
       <h2 className="text-2xl font-bold tracking-tight">{name}</h2>
       <p className="text-muted-foreground">
-        A {party} from {district}&apos;th district of {state}. {pronoun} is{" "}
-        {age} yrs old and is up for reelection in {reelection}.
+        A {party} from {district}th district of {state}. {pronoun} is {age} yrs
+        old and is up for reelection in {reelection}.
       </p>
     </div>
   );

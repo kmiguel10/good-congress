@@ -250,3 +250,27 @@ export function getHeaderInfo(member: MemberType[]): IndividualMemberHeader {
 
   return header;
 }
+
+export function getCommitteeTableData(
+  committees: CommitteeType[]
+): CommitteeTableDataType[] {
+  let committeeData: CommitteeTableDataType[] = [];
+
+  committees.forEach((committee) => {
+    const date = new Date(committee.end_date);
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "short", // Use short month name (e.g., "Jan")
+      day: "numeric",
+    };
+    const endDate = new Intl.DateTimeFormat("en-US", options).format(date);
+    committeeData.push({
+      committeeName: committee.name,
+      title: committee.title,
+      rank: committee.rank_in_party,
+      end_date: endDate,
+    });
+  });
+
+  return committeeData;
+}

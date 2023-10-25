@@ -198,4 +198,11 @@ declare global {
     reelection: string;
     pronoun: string;
   };
+
+  type CommitteeTableDataType = {
+    committeeName: string;
+    title: string;
+    rank: number;
+    end_date: string;
+  };
 }
