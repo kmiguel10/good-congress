@@ -67,7 +67,7 @@ declare global {
    */
   interface cardProps {
     title: string;
-    body: string;
+    body: string | null;
     subBody: string;
   }
 
@@ -204,5 +204,14 @@ declare global {
     title: string;
     rank: number;
     end_date: string;
+  };
+
+  type VotingBehaviorDataType = {
+    totalVotes: number;
+    missedVotes: number;
+    totalPresent: number;
+    missedVotesPct: number;
+    votesWithPartyPct: number;
+    votesAgainstPartyPct: number;
   };
 }

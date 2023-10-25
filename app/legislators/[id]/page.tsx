@@ -1,4 +1,8 @@
-import { getCommitteeTableData, getHeaderInfo } from "@/lib/utils";
+import {
+  getCommitteeTableData,
+  getHeaderInfo,
+  getVotingBehaviorDataType,
+} from "@/lib/utils";
 import React from "react";
 import LegislatorHeader from "./components/legislator-header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -6,6 +10,7 @@ import CardDashboard from "@/app/components/card-dashboard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CommonOptions } from "child_process";
 import CommitteeTable from "./components/committee-table.tsx/committee-table";
+import VotingBehavior from "./components/voting-behavior-table";
 
 interface Props {
   params: { id: string };
@@ -34,6 +39,7 @@ export default async function LegislatorInformation({ params }: Props) {
   );
   const legislatorSubcommittees: CommitteeTableDataType[] =
     getCommitteeTableData(memberData.results[0].roles[0].subcommittees);
+  const votingData = getVotingBehaviorDataType(memberData.results[0].roles[0]);
 
   return (
     <div className="container relative">
@@ -65,9 +71,9 @@ export default async function LegislatorInformation({ params }: Props) {
                   subBody="Total Cosponsored Bills in current congress"
                 />
                 <CardDashboard
-                  title="Total Votes"
-                  body={memberData.results[0].roles[0].total_votes.toString()}
-                  subBody="Total Cosponsored Bills in current congress"
+                  title="Leadership Role"
+                  body={memberData.results[0].roles[0].leadership_role}
+                  subBody=""
                 />
               </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-8">
@@ -83,6 +89,14 @@ export default async function LegislatorInformation({ params }: Props) {
                   </CardHeader>
                   <CardContent className="pl-2">
                     <CommitteeTable committees={legislatorSubcommittees} />
+                  </CardContent>
+                </Card>
+                <Card className="col-span-3">
+                  <CardHeader>
+                    <CardTitle>Voting Behavior</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pl-2">
+                    <VotingBehavior votingData={votingData} />
                   </CardContent>
                 </Card>
               </div>

@@ -332,3 +332,16 @@ export function getCommitteeTableData(
 
   return committeeData;
 }
+
+export function getVotingBehaviorDataType(
+  data: RoleType
+): VotingBehaviorDataType {
+  return {
+    totalVotes: data.total_votes,
+    missedVotes: data.missed_votes,
+    totalPresent: data.total_present,
+    missedVotesPct: data.missed_votes_pct,
+    votesWithPartyPct: data.votes_with_party_pct,
+    votesAgainstPartyPct: data.votes_against_party_pct,
+  };
+}
