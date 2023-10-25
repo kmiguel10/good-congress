@@ -225,3 +225,28 @@ export function getLegislatorTableData(
 
   return legislatureData;
 }
+
+export function getHeaderInfo(member: MemberType[]): IndividualMemberHeader {
+  const roles = member[0].roles[0];
+  const getParty = (party: string): string => {
+    return party === "D" ? "democrat" : "republican";
+  };
+  const birthDate = new Date(member[0].date_of_birth);
+  const today = new Date();
+  const age = today.getFullYear() - birthDate.getFullYear();
+  const getPronoun = (gender: string): string => {
+    return gender === "F" ? "She" : "He";
+  };
+
+  const header: IndividualMemberHeader = {
+    name: `${roles.short_title} ${member[0].first_name} ${member[0].last_name}`,
+    party: getParty(member[0].current_party),
+    district: roles.district,
+    state: roles.party,
+    age: age,
+    reelection: roles.next_election,
+    pronoun: getPronoun(member[0].gender),
+  };
+
+  return header;
+}
