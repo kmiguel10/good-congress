@@ -193,7 +193,7 @@ declare global {
     name: string;
     party: string;
     district: string;
-    state: string;
+    state: string | undefined;
     age: number;
     reelection: string;
     pronoun: string;

@@ -226,6 +226,64 @@ export function getLegislatorTableData(
   return legislatureData;
 }
 
+function getStateName(stateAbbreviation: string): string | undefined {
+  const stateAbbreviations: { [key: string]: string } = {
+    AL: "Alabama",
+    AK: "Alaska",
+    AZ: "Arizona",
+    AR: "Arkansas",
+    CA: "California",
+    CO: "Colorado",
+    CT: "Connecticut",
+    DE: "Delaware",
+    FL: "Florida",
+    GA: "Georgia",
+    HI: "Hawaii",
+    ID: "Idaho",
+    IL: "Illinois",
+    IN: "Indiana",
+    IA: "Iowa",
+    KS: "Kansas",
+    KY: "Kentucky",
+    LA: "Louisiana",
+    ME: "Maine",
+    MD: "Maryland",
+    MA: "Massachusetts",
+    MI: "Michigan",
+    MN: "Minnesota",
+    MS: "Mississippi",
+    MO: "Missouri",
+    MT: "Montana",
+    NE: "Nebraska",
+    NV: "Nevada",
+    NH: "New Hampshire",
+    NJ: "New Jersey",
+    NM: "New Mexico",
+    NY: "New York",
+    NC: "North Carolina",
+    ND: "North Dakota",
+    OH: "Ohio",
+    OK: "Oklahoma",
+    OR: "Oregon",
+    PA: "Pennsylvania",
+    RI: "Rhode Island",
+    SC: "South Carolina",
+    SD: "South Dakota",
+    TN: "Tennessee",
+    TX: "Texas",
+    UT: "Utah",
+    VT: "Vermont",
+    VA: "Virginia",
+    WA: "Washington",
+    WV: "West Virginia",
+    WI: "Wisconsin",
+    WY: "Wyoming",
+    // Add more states if needed
+  };
+
+  return stateAbbreviations[stateAbbreviation] || undefined;
+}
+
 export function getHeaderInfo(member: MemberType[]): IndividualMemberHeader {
   const roles = member[0].roles[0];
   const getParty = (party: string): string => {
@@ -242,7 +300,7 @@ export function getHeaderInfo(member: MemberType[]): IndividualMemberHeader {
     name: `${roles.short_title} ${member[0].first_name} ${member[0].last_name}`,
     party: getParty(member[0].current_party),
     district: roles.district,
-    state: roles.state,
+    state: getStateName(roles.state),
     age: age,
     reelection: roles.next_election,
     pronoun: getPronoun(member[0].gender),
