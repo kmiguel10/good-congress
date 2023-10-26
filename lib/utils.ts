@@ -304,6 +304,7 @@ export function getHeaderInfo(member: MemberType[]): IndividualMemberHeader {
     age: age,
     reelection: roles.next_election,
     pronoun: getPronoun(member[0].gender),
+    leadership_role: roles.leadership_role,
   };
 
   return header;

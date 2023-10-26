@@ -197,6 +197,7 @@ declare global {
     age: number;
     reelection: string;
     pronoun: string;
+    leadership_role: string | null;
   };
 
   type CommitteeTableDataType = {
