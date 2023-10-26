@@ -12,7 +12,12 @@ export const columns: ColumnDef<LegislatorTableDataType>[] = [
     accessorKey: "name",
     header: "Legislator",
     cell: ({ row }) => (
-      <Link href={`/legislators/${row.original.id}`}>{row.original.name}</Link>
+      <Link
+        className="underline decoration-sky-600 hover:text-purple-600"
+        href={`/legislators/${row.original.id}`}
+      >
+        {row.original.name}
+      </Link>
     ),
   },
   {
@@ -22,6 +27,15 @@ export const columns: ColumnDef<LegislatorTableDataType>[] = [
   {
     accessorKey: "party",
     header: "Party",
+    cell: ({ row }) => {
+      if (row.original.party === "D") {
+        return <div className="text-blue-600">{row.getValue("party")}</div>;
+      } else if (row.original.party === "R") {
+        return <div className="text-red-600">{row.getValue("party")}</div>;
+      } else {
+        return <div className="text-green-600">{row.getValue("party")}</div>;
+      }
+    },
   },
   {
     accessorKey: "age",

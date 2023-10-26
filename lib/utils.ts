@@ -1,3 +1,4 @@
+import { BillAPIResponse } from "@/app/global";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -345,4 +346,8 @@ export function getVotingBehaviorDataType(
     votesWithPartyPct: data.votes_with_party_pct,
     votesAgainstPartyPct: data.votes_against_party_pct,
   };
+}
+
+export function getBillsPassedByMember(data: BillAPIResponse): string {
+  return data.results[0].num_results.toString();
 }

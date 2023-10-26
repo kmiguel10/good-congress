@@ -69,6 +69,7 @@ declare global {
     title: string;
     body: string | null;
     subBody: string;
+    tooltipContent: string | null;
   }
 
   type barChartDataType = {
@@ -216,3 +217,52 @@ declare global {
     votesAgainstPartyPct: number;
   };
 }
+
+type Bill = {
+  congress: string;
+  bill_id: string;
+  bill_type: string;
+  number: string;
+  bill_uri: string;
+  title: string;
+  short_title: string;
+  sponsor_title: string;
+  sponsor_id: string;
+  sponsor_name: string;
+  sponsor_state: string;
+  sponsor_party: string;
+  sponsor_uri: string;
+  gpo_pdf_uri: string | null;
+  congressdotgov_url: string;
+  govtrack_url: string;
+  introduced_date: string;
+  active: boolean;
+  last_vote: string | null;
+  house_passage: string;
+  senate_passage: string;
+  enacted: string;
+  vetoed: string | null;
+  cosponsors: number;
+  cosponsors_by_party: Record<string, number>;
+  committees: string;
+  primary_subject: string;
+  summary: string;
+  summary_short: string;
+  latest_major_action_date: string;
+  latest_major_action: string;
+};
+
+type MemberByBill = {
+  id: string;
+  member_uri: string;
+  name: string;
+  num_results: number;
+  offset: number;
+  bills: Bill[];
+};
+
+type BillAPIResponse = {
+  status: string;
+  copyright: string;
+  results: MemberByBill[];
+};

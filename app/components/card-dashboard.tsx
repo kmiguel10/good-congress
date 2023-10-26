@@ -2,8 +2,14 @@
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import React from "react";
+import { CardTooltip } from "./tool-tip";
 
-export default function CardDashboard({ title, body, subBody }: cardProps) {
+export default function CardDashboard({
+  title,
+  body,
+  subBody,
+  tooltipContent,
+}: cardProps) {
   return (
     <>
       <Card>
@@ -21,6 +27,7 @@ export default function CardDashboard({ title, body, subBody }: cardProps) {
           >
             <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
           </svg> */}
+          {tooltipContent && <CardTooltip content={tooltipContent} />}
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{body}</div>
