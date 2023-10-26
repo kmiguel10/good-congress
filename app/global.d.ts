@@ -69,7 +69,7 @@ declare global {
     title: string;
     body: string | null;
     subBody: string;
-    tooltipContent: string | null;
+    tooltipContent?: string | null;
   }
 
   type barChartDataType = {

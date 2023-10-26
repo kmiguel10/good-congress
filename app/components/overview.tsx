@@ -62,7 +62,7 @@ export default function Overview({
           <CardDashboard
             title="Bills Passed"
             body="Number"
-            subBody="Number of bills passed "
+            subBody="Number of bills passed"
           />
         )}
       </div>
