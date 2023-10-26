@@ -101,10 +101,9 @@ export default async function LegislatorInformation({ params }: Props) {
                 </Card>
               </div>
             </TabsContent>
-            <TabsContent
-              value="fundraising"
-              className="space-y-4"
-            ></TabsContent>
+            <TabsContent value="fundraising" className="space-y-4">
+              Work in progress...
+            </TabsContent>
           </Tabs>
           {/* <div className="flex-1 space-y-4 p-8 pt-6">
             <LegislatorsTable />
