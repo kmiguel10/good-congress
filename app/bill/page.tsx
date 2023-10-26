@@ -1,5 +1,5 @@
 import React from "react";
 
 export default function Bill() {
-  return <div>Bill</div>;
+  return <div>Work in progress...</div>;
 }
