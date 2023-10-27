@@ -18,6 +18,7 @@ import {
 } from "@/lib/utils";
 import TopContributorsTable from "./top-contributor-table.tsx/page";
 import FundraisingSummaryPieChart from "./fundraising-summary-pie-chart";
+import { CardTooltip } from "@/app/components/tool-tip";
 
 interface Props {
   params: { id: string };
@@ -94,6 +95,7 @@ export default async function Fundraising({ params }: Props) {
               Last Update: {candidateData.last_updated}
             </CardDescription>
           </CardHeader>
+          {/* <CardTooltip content="TEST" /> */}
           <CardContent className="pl-2">
             <FundraisingBarChart candidateFunds={candidateData} />
           </CardContent>

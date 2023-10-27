@@ -1,17 +1,14 @@
 "use client";
 
 import { calculateCongressAgeData } from "@/lib/utils";
-import React from "react";
 import {
-  BarChart,
   Bar,
-  Rectangle,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
+  BarChart,
   Legend,
+  Rectangle,
   ResponsiveContainer,
+  Tooltip,
+  XAxis,
 } from "recharts";
 
 export default function AgeBarChart({ members }: { members: Member[] }) {
