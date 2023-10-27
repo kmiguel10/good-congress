@@ -1,16 +1,17 @@
+import CardDashboard from "@/app/components/card-dashboard";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
+  getBillsPassedByMember,
   getCommitteeTableData,
   getHeaderInfo,
   getVotingBehaviorDataType,
 } from "@/lib/utils";
-import React from "react";
-import LegislatorHeader from "./components/legislator-header";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import CardDashboard from "@/app/components/card-dashboard";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CommonOptions } from "child_process";
 import CommitteeTable from "./components/committee-table.tsx/committee-table";
+import LegislatorHeader from "./components/legislator-header";
 import VotingBehavior from "./components/voting-behavior-table";
+import Fundraising from "./components/fundraising";
 
 interface Props {
   params: { id: string };
@@ -41,6 +42,20 @@ export default async function LegislatorInformation({ params }: Props) {
     getCommitteeTableData(memberData.results[0].roles[0].subcommittees);
   const votingData = getVotingBehaviorDataType(memberData.results[0].roles[0]);
 
+  const billResponse = await fetch(
+    `https://api.propublica.org/congress/v1/members/${memberData.results[0].id}/bills/passed.json`,
+    {
+      headers: {
+        "X-API-Key": process.env.PRO_PUBLICA_API_KEY || "",
+      },
+    }
+  );
+
+  const billDatabyMember: BillAPIResponse = await billResponse.json();
+  const billsPassed = getBillsPassedByMember(billDatabyMember);
+
+  const sponsoredBillPassed: string = `Sponsored by ${headerInfo.name}`;
+
   return (
     <div className="container relative">
       <div className="overflow-hidden rounded-lg border bg-background shadow space-y-4">
@@ -52,6 +67,10 @@ export default async function LegislatorInformation({ params }: Props) {
             <TabsList>
               <TabsTrigger value="summary">Summary</TabsTrigger>
               <TabsTrigger value="fundraising">Fundraising</TabsTrigger>
+              <TabsTrigger value="expenses">Expenses</TabsTrigger>
+              <TabsTrigger value="privately_funded_travel">
+                Privately Funded Travel
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="summary" className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
@@ -59,21 +78,25 @@ export default async function LegislatorInformation({ params }: Props) {
                   title="Seniority"
                   body={memberData.results[0].roles[0].seniority.toString()}
                   subBody="Years of service"
+                  tooltipContent=""
                 />
                 <CardDashboard
                   title="Sponsored Bills"
                   body={memberData.results[0].roles[0].bills_sponsored.toString()}
                   subBody="Total Sponsored Bills in current congress"
+                  tooltipContent=""
                 />
                 <CardDashboard
                   title="Cosponsored Bills"
                   body={memberData.results[0].roles[0].bills_cosponsored.toString()}
                   subBody="Total Cosponsored Bills in current congress"
+                  tooltipContent=""
                 />
                 <CardDashboard
-                  title="Leadership Role"
-                  body={memberData.results[0].roles[0].leadership_role}
-                  subBody=""
+                  title="Sponsored Bills Passed"
+                  body={billsPassed}
+                  subBody="Passed by House and Congress"
+                  tooltipContent="Passed during entire career in congress"
                 />
               </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-8">
@@ -102,6 +125,16 @@ export default async function LegislatorInformation({ params }: Props) {
               </div>
             </TabsContent>
             <TabsContent value="fundraising" className="space-y-4">
+              <Fundraising
+                params={{
+                  id: memberData.results[0].crp_id,
+                }}
+              />
+            </TabsContent>
+            <TabsContent value="expenses" className="space-y-4">
+              Work in progress...
+            </TabsContent>
+            <TabsContent value="privately_funded_travel" className="space-y-4">
               Work in progress...
             </TabsContent>
           </Tabs>

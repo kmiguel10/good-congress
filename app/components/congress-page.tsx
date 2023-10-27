@@ -71,11 +71,13 @@ export default function CongressPage({ congressData }: Props) {
               title="Avg Age"
               body={getAvgAge(activeMembers).toString()}
               subBody="Average age of legislators"
+              tooltipContent=""
             />
             <CardDashboard
               title="Avg Tenure"
               body={getAvgTenure(activeMembers).toString()}
               subBody="Average tenure of legislators"
+              tooltipContent=""
             />
           </div>
           {/**TODO: will need to fix the layout of the bar chart */}
