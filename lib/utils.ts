@@ -1,4 +1,3 @@
-import { BillAPIResponse } from "@/app/global";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -7,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- *Calculates the total active members of congress by filtering out inactive and delegate members
+ *Calculates the total active members of congress by filtering out inactive and delegate members with Chamber filter
  * @param data of type CongressData from the API
  * @returns returns an array of filtered Member[]
  */
@@ -38,6 +37,11 @@ export function getActiveMembers(
   }
 }
 
+/**
+ * Calculates the total active members of congress by filtering out inactive and delegate members with Chamber filter
+ * @param congress : CongressData
+ * @returns Member[]
+ */
 export function getActiveMembersWithoutChamberFilter(
   congress: CongressData
 ): Member[] {
@@ -97,10 +101,6 @@ export function calculateCongressAgeData(
   members: Member[],
   results: barChartDataType[]
 ): barChartDataType[] {
-  // if (!members || !Array.isArray(members)) {
-  //   // Handle the case where members is not an array or is null/undefined.
-  //   return results;
-  // }
   members.forEach((member) => {
     const birthDate = new Date(member.date_of_birth);
     const today = new Date();
@@ -181,6 +181,11 @@ export function getAvgAge(members: Member[]): number {
   return Math.round(sumAge / members.length);
 }
 
+/**
+ *
+ * @param members Get average tenure(years) of Members[]
+ * @returns Average Tenure (years)
+ */
 export function getAvgTenure(members: Member[]): number {
   let sumTenure = 0;
   members.forEach((member) => {
@@ -189,10 +194,20 @@ export function getAvgTenure(members: Member[]): number {
   return Math.round(sumTenure / members.length);
 }
 
+/**
+ *
+ * @param shortTitle Get Chamber name based on short title
+ * @returns Senate or House
+ */
 export function getChamber(shortTitle: string): string {
   return shortTitle === "Sen." ? "Senate" : "House";
 }
 
+/**
+ * Get data for Legislator Table from member[]
+ * @param members
+ * @returns Legislator Table Data LegislatorTableDataType[]
+ */
 export function getLegislatorTableData(
   members: Member[]
 ): LegislatorTableDataType[] {
@@ -227,6 +242,11 @@ export function getLegislatorTableData(
   return legislatureData;
 }
 
+/**
+ * Get state name based on given abbreviation
+ * @param stateAbbreviation
+ * @returns State Name
+ */
 function getStateName(stateAbbreviation: string): string | undefined {
   const stateAbbreviations: { [key: string]: string } = {
     AL: "Alabama",
@@ -285,6 +305,11 @@ function getStateName(stateAbbreviation: string): string | undefined {
   return stateAbbreviations[stateAbbreviation] || undefined;
 }
 
+/**
+ * Get header information
+ * @param member
+ * @returns IndividualMemberHeader
+ */
 export function getHeaderInfo(member: MemberType[]): IndividualMemberHeader {
   const roles = member[0].roles[0];
   const getParty = (party: string): string => {
@@ -311,6 +336,11 @@ export function getHeaderInfo(member: MemberType[]): IndividualMemberHeader {
   return header;
 }
 
+/**
+ * Get committee and subcommittee table data
+ * @param committees
+ * @returns CommitteeTableDataType[]
+ */
 export function getCommitteeTableData(
   committees: CommitteeType[]
 ): CommitteeTableDataType[] {
@@ -335,6 +365,11 @@ export function getCommitteeTableData(
   return committeeData;
 }
 
+/**
+ * Get voting behavior data type
+ * @param data
+ * @returns VotingBehaviorDataType
+ */
 export function getVotingBehaviorDataType(
   data: RoleType
 ): VotingBehaviorDataType {
@@ -348,6 +383,219 @@ export function getVotingBehaviorDataType(
   };
 }
 
+/**
+ *
+ * @param data Get bills passed by given member
+ * @returns Number of bills passed
+ */
 export function getBillsPassedByMember(data: BillAPIResponse): string {
   return data.results[0].num_results.toString();
+}
+
+/**
+ * Formats dollar value to dollar value string
+ * @param value
+ * @returns
+ */
+function formatDollarValue(value: number): string {
+  return "$" + value.toLocaleString("en-US");
+}
+
+/**
+ * Get fundraising bar chart data
+ * @param data
+ * @returns FundraisingBarChartData[]
+ */
+export function getFundraisingBarChartData(
+  data: CandSummaryResponse
+): FundraisingBarChartData[] {
+  const fundraisingData: FundraisingBarChartData[] = [];
+
+  fundraisingData.push({
+    name: "Raised",
+    value: parseInt(data.total),
+    dollarValue: formatDollarValue(parseInt(data.total)),
+  });
+
+  fundraisingData.push({
+    name: "Spent",
+    value: parseInt(data.spent),
+    dollarValue: formatDollarValue(parseInt(data.spent)),
+  });
+
+  fundraisingData.push({
+    name: "Cash on Hand",
+    value: parseInt(data.cash_on_hand),
+    dollarValue: formatDollarValue(parseInt(data.cash_on_hand)),
+  });
+
+  fundraisingData.push({
+    name: "Debts",
+    value: parseInt(data.debt),
+    dollarValue: formatDollarValue(parseInt(data.debt)),
+  });
+
+  return fundraisingData;
+}
+
+/**
+ * Get top contributor table data
+ * @param data
+ * @returns FundraisingContributorsData
+ */
+export function getTopContributorTableData(
+  data: FundraisingContributors
+): FundraisingContributorsData {
+  const contributors: FundraisingContributorData[] = [];
+  let topContributor: FundraisingContributorData = {
+    org_name: "",
+    total: 0,
+    pacs: 0,
+    indivs: 0,
+  };
+
+  let top_contributor = "";
+
+  data.response.contributors.contributor.forEach((contributor) => {
+    const contributorData: FundraisingContributorData = {
+      org_name: contributor["@attributes"].org_name,
+      total: parseInt(contributor["@attributes"].total),
+      pacs: parseInt(contributor["@attributes"].pacs),
+      indivs: parseInt(contributor["@attributes"].indivs),
+    };
+
+    contributors.push(contributorData);
+
+    // Check if this contributor is the top contributor
+    if (contributorData.total > topContributor.total) {
+      top_contributor = contributorData.org_name;
+      topContributor.total = contributorData.total;
+    }
+  });
+
+  return { contributors, top_contributor };
+}
+
+/**
+ * Gets top industries table data
+ * @param data from industry API
+ * @returns FundraisingContributorsData
+ */
+export function getTopIndustriesTableData(
+  data: FundraisingIndustries
+): FundraisingContributorsData {
+  const contributors: FundraisingContributorData[] = [];
+  let topContributor: fundraisingIndustryData = {
+    industry_name: "",
+    total: 0,
+    pacs: 0,
+    indivs: 0,
+    industry_code: "",
+  };
+
+  let top_contributor = "";
+
+  data.response.industries.industry.forEach((industry) => {
+    const contributorData: FundraisingContributorData = {
+      org_name: industry["@attributes"].industry_name,
+      total: parseInt(industry["@attributes"].total),
+      pacs: parseInt(industry["@attributes"].pacs),
+      indivs: parseInt(industry["@attributes"].indivs),
+    };
+
+    contributors.push(contributorData);
+
+    // Check if this contributor is the top contributor
+    if (contributorData.total > topContributor.total) {
+      top_contributor = contributorData.org_name;
+      topContributor.total = contributorData.total;
+    }
+  });
+
+  return { contributors, top_contributor };
+}
+
+/**
+ * Gets fundraising data by sector for table
+ * @param data from industry API
+ * @returns FundraisingContributorsData
+ */
+export function getTopSectorTableData(
+  data: FundraisingSectors
+): FundraisingContributorsData {
+  const contributors: FundraisingContributorData[] = [];
+  let topContributor: fundraisingSectorData = {
+    sector_name: "",
+    total: 0,
+    pacs: 0,
+    indivs: 0,
+    sectorid: "",
+  };
+
+  let top_contributor = "";
+
+  data.response.sectors.sector.forEach((sector) => {
+    const contributorData: FundraisingContributorData = {
+      org_name: sector["@attributes"].sector_name,
+      total: parseInt(sector["@attributes"].total),
+      pacs: parseInt(sector["@attributes"].pacs),
+      indivs: parseInt(sector["@attributes"].indivs),
+    };
+
+    contributors.push(contributorData);
+
+    // Check if this contributor is the top contributor
+    if (contributorData.total > topContributor.total) {
+      top_contributor = contributorData.org_name;
+      topContributor.total = contributorData.total;
+    }
+  });
+
+  return { contributors, top_contributor };
+}
+
+export function getFundraisingSummaryPieChartData(
+  data: FundraisingSectors
+): FundraisingPieChartElement[] {
+  const pieChartData: FundraisingPieChartElement[] = [
+    {
+      name: "Individual",
+      value: 0,
+      label: "",
+    },
+    {
+      name: "PACs",
+      value: 0,
+      label: "",
+    },
+  ];
+
+  data.response.sectors.sector.forEach((sector) => {
+    const individualValue = parseInt(sector["@attributes"].indivs);
+    const pacsValue = parseInt(sector["@attributes"].pacs);
+
+    const individualObject = pieChartData.find(
+      (data) => data.name === "Individual"
+    );
+    const pacsObject = pieChartData.find((data) => data.name === "PACs");
+
+    if (individualValue > 0) {
+      individualObject!.value =
+        (individualObject!.value || 0) + individualValue;
+      individualObject!.label =
+        "Individual: " + formatDollarValue(individualObject!.value).toString();
+    }
+
+    if (pacsValue > 0) {
+      pacsObject!.value = (pacsObject!.value || 0) + pacsValue;
+      pacsObject!.label =
+        "PACs: " + formatDollarValue(pacsObject!.value).toString();
+    }
+
+    // pieChartData.individual += parseInt(sector["@attributes"].indivs);
+    // pieChartData.pacs += parseInt(sector["@attributes"].pacs);
+    // pieChartData.total += parseInt(sector["@attributes"].total);
+  });
+
+  return pieChartData;
 }
