@@ -1,5 +1,5 @@
 import CardDashboard from "@/app/components/card-dashboard";
-import { BillAPIResponse } from "@/app/global";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -11,6 +11,7 @@ import {
 import CommitteeTable from "./components/committee-table.tsx/committee-table";
 import LegislatorHeader from "./components/legislator-header";
 import VotingBehavior from "./components/voting-behavior-table";
+import Fundraising from "./components/fundraising";
 
 interface Props {
   params: { id: string };
@@ -124,7 +125,11 @@ export default async function LegislatorInformation({ params }: Props) {
               </div>
             </TabsContent>
             <TabsContent value="fundraising" className="space-y-4">
-              Work in progress...
+              <Fundraising
+                params={{
+                  id: memberData.results[0].crp_id,
+                }}
+              />
             </TabsContent>
             <TabsContent value="expenses" className="space-y-4">
               Work in progress...
