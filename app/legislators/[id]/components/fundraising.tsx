@@ -1,24 +1,22 @@
-import CardDashboard from "@/app/components/card-dashboard";
-import PartyTable from "@/app/components/party-table/page";
-
 import {
   Card,
-  CardHeader,
-  CardTitle,
   CardContent,
   CardDescription,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
-import React from "react";
-import FundraisingBarChart from "./fundraising-bar-chart";
 import {
   getFundraisingSummaryPieChartData,
   getTopContributorTableData,
   getTopIndustriesTableData,
   getTopSectorTableData,
 } from "@/lib/utils";
-import TopContributorsTable from "./top-contributor-table.tsx/page";
+import FundraisingBarChart from "./fundraising-bar-chart";
 import FundraisingSummaryPieChart from "./fundraising-summary-pie-chart";
+import TopContributorsTable from "./top-contributor-table.tsx/page";
 import { CardTooltip } from "@/app/components/tool-tip";
+import FundraisingCard from "./fundraising-card";
+import { TooltipContent } from "@radix-ui/react-tooltip";
 
 interface Props {
   params: { id: string };
@@ -87,64 +85,47 @@ export default async function Fundraising({ params }: Props) {
     <>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-8">
         <Card className="col-span-4">
-          <CardHeader>
-            <CardTitle>
-              Campaign Committee Fundraising {candidateData.cycle}
-            </CardTitle>
-            <CardDescription>
-              Last Update: {candidateData.last_updated}
-            </CardDescription>
-          </CardHeader>
-          {/* <CardTooltip content="TEST" /> */}
-          <CardContent className="pl-2">
-            <FundraisingBarChart candidateFunds={candidateData} />
-          </CardContent>
-          <CardHeader>
-            <CardTitle>
-              Source of Funds Breakdown {candidateData.cycle}
-            </CardTitle>
-            <CardDescription>
-              Last Update: {candidateData.last_updated}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pl-2">
-            <FundraisingSummaryPieChart
-              contributionBreakdown={contributionBreakdown}
-            />
-          </CardContent>
+          <FundraisingCard
+            cardTitle={`Campaign Committee Fundraising for ${candidateData.cycle} Cycle`}
+            cardDescription={`Last Updated ${candidateData.last_updated}`}
+            cardContent={<FundraisingBarChart candidateFunds={candidateData} />}
+          />
+          <FundraisingCard
+            cardTitle={`Source of Funds Breakdown ${candidateData.cycle}`}
+            cardDescription={`Last Updated ${candidateData.last_updated}`}
+            cardContent={
+              <FundraisingSummaryPieChart
+                contributionBreakdown={contributionBreakdown}
+              />
+            }
+          />
         </Card>
         <Card className="col-span-4">
-          <CardHeader>
-            <CardTitle>
-              Top Contributor: {topContributorTableData.top_contributor}
-            </CardTitle>
-            <CardDescription>
-              Last Update: {candidateData.last_updated}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pl-2">
-            <TopContributorsTable data={topContributorTableData.contributors} />
-          </CardContent>
-          <CardHeader>
-            <CardTitle>
-              Top Industry: {topIndustriesData.top_contributor}
-            </CardTitle>
-            <CardDescription>
-              Last Update: {candidateData.last_updated}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pl-2">
-            <TopContributorsTable data={topIndustriesData.contributors} />
-          </CardContent>
-          <CardHeader>
-            <CardTitle>Top Sector: {topSectorsData.top_contributor}</CardTitle>
-            <CardDescription>
-              Last Update: {candidateData.last_updated}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pl-2">
-            <TopContributorsTable data={topSectorsData.contributors} />
-          </CardContent>
+          <FundraisingCard
+            cardTitle={`Top Contributor: ${topContributorTableData.top_contributor}`}
+            cardDescription="Top 10 Biggest Contributors"
+            cardContent={
+              <TopContributorsTable
+                data={topContributorTableData.contributors}
+              />
+            }
+            tooltipContent={
+              candContribData.response.contributors["@attributes"].notice
+            }
+          />
+          <FundraisingCard
+            cardTitle={`Top Industry: ${topIndustriesData.top_contributor}`}
+            cardDescription="Top 10 Biggest Industry Contributors"
+            cardContent={
+              <TopContributorsTable data={topIndustriesData.contributors} />
+            }
+          />
+          <FundraisingCard
+            cardTitle={`Top Sector: ${topSectorsData.top_contributor}`}
+            cardContent={
+              <TopContributorsTable data={topSectorsData.contributors} />
+            }
+          />
         </Card>
       </div>
     </>
