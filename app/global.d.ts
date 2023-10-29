@@ -415,4 +415,38 @@ declare global {
     value: number;
     label: string;
   };
+
+  type CommitteeSubcommittee = {
+    id: string;
+    name: string;
+    api_uri: string;
+  };
+
+  type Committee = {
+    id: string;
+    name: string;
+    chamber: string;
+    url: string;
+    api_uri: string;
+    chair: string;
+    chair_id: string;
+    chair_party: string;
+    chair_state: string;
+    chair_uri: string;
+    ranking_member_id: string;
+    subcommittees: CommitteeSubcommittee[];
+  };
+
+  type CommitteeResult = {
+    congress: string;
+    chamber: string;
+    num_results: number;
+    committees: Committee[];
+  };
+
+  type CommitteeApiResponse = {
+    status: string;
+    copyright: string;
+    results: CommitteeResult[];
+  };
 }

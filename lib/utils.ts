@@ -599,3 +599,11 @@ export function getFundraisingSummaryPieChartData(
 
   return pieChartData;
 }
+
+export function getSenateCommittees(data: CommitteeApiResponse): Committee[] {
+  return data.results[0].committees;
+}
+
+export function getHouseCommittees(data: CommitteeApiResponse): Committee[] {
+  return data.results[0].committees;
+}
