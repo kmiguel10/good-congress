@@ -2,10 +2,11 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import CommitteeTable from "./committee-table.tsx/page";
 
 interface Props {
-  senateCommittees: Committee[];
-  houseCommittees: Committee[];
+  senateCommittees: CommitteeTableData[];
+  houseCommittees: CommitteeTableData[];
 }
 
 export default function CommitteePageContent({
@@ -19,7 +20,7 @@ export default function CommitteePageContent({
           <CardTitle>Senate</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>Senate Committees</p>
+          <CommitteeTable data={senateCommittees} />
         </CardContent>
       </Card>
       <Card className="col-span-4">
@@ -28,7 +29,7 @@ export default function CommitteePageContent({
           {/* <CardDescription>You made 265 sales this month.</CardDescription> */}
         </CardHeader>
         <CardContent>
-          <p>House Committees</p>
+          <CommitteeTable data={houseCommittees} />
         </CardContent>
       </Card>
     </div>

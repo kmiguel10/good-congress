@@ -449,4 +449,77 @@ declare global {
     copyright: string;
     results: CommitteeResult[];
   };
+
+  type CommitteeTableData = {
+    id: string;
+    congress: number;
+    chamber: string;
+    committee_name: string;
+    chair_name: string;
+    chair_party: string;
+  };
+
+  //Individual Committee
+  type CommitteeAPIResponse = {
+    status: string;
+    copyright: string;
+    results: IndivCommitteeResult[];
+  };
+
+  type IndivCommitteeResult = {
+    congress: string;
+    chamber: string;
+    id: string;
+    name: string;
+    url: string;
+    num_results: number;
+    chair: string;
+    chair_id: string;
+    chair_party: string;
+    chair_state: string;
+    ranking_member_id: string;
+    current_members: CommitteeMember[];
+    former_members: CommitteeMember[];
+    subcommittees: IndivCommitteeSubcommittee[];
+  };
+
+  type CommitteeMember = {
+    id: string;
+    name: string;
+    api_uri: string;
+    party: string;
+    chamber: string;
+    side: string;
+    rank_in_party: number | null;
+    state: string;
+    note: string | null;
+    begin_date: string | null;
+    end_date: string | null;
+  };
+
+  type IndivCommitteeSubcommittee = {
+    id: string;
+    name: string;
+    api_uri: string;
+  };
+
+  type CommitteeHeaderData = {
+    chamber: string;
+    name: string;
+    url: string;
+    chair: string;
+    chair_party: string;
+    chair_state: string;
+  };
+
+  type CommitteeMembersTableData = {
+    id: string;
+    name: string;
+    party: string;
+    chamber: string;
+    side: string;
+    rank_in_party: number | null;
+    state: string;
+    note: string | null;
+  };
 }

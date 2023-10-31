@@ -15,42 +15,19 @@ export default function LegislatorHeader({
     pronoun,
     leadership_role,
   } = headerInfo;
-  return !leadership_role ? (
+
+  return (
     <div>
       <h2 className="text-2xl font-bold tracking-tight">{name}</h2>
-      {district && (
-        <p className="text-muted-foreground">
-          A {party} from the {district}th district of {state}. {pronoun} is{" "}
-          {age} yrs old and is up for reelection in{" "}
-          <strong>{reelection}</strong>.
-        </p>
-      )}
-      {!district && (
-        <p className="text-muted-foreground">
-          A {party} from the state of {state}. {pronoun} is {age} yrs old and is
-          up for reelection in <strong>{reelection}</strong>.
-        </p>
-      )}
-    </div>
-  ) : (
-    <div>
-      {" "}
-      <h2 className="text-2xl font-bold tracking-tight">{name}</h2>
-      {district && (
-        <p className="text-muted-foreground">
-          A {party} from the {district}th district of {state}. {pronoun} is{" "}
-          {age} yrs old and is up for reelection in{" "}
-          <strong>{reelection}</strong>. {pronoun} serves as the{" "}
-          <strong>{leadership_role}</strong>.
-        </p>
-      )}
-      {!district && (
-        <p className="text-muted-foreground">
-          A {party} from the state of {state}. {pronoun} is {age} yrs old and is
-          up for reelection in <strong>{reelection}</strong>. {pronoun} serves
-          as the <strong>{leadership_role}</strong>.
-        </p>
-      )}
+      <p className="text-muted-foreground">
+        {`A ${party} from ${
+          district ? `the ${district}th district of ` : "the state of "
+        }${state}. ${pronoun} is ${age} yrs old and is up for reelection in `}
+        <strong>{reelection}</strong>
+        {leadership_role
+          ? `. ${pronoun} serves as the ${leadership_role}.`
+          : "."}
+      </p>
     </div>
   );
 }

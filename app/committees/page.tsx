@@ -1,37 +1,24 @@
-import { getSenateCommittees, getHouseCommittees } from "@/lib/utils";
+import { getCommittees } from "@/lib/utils";
 import CommitteePageContent from "./components/committee-page-context";
+
+async function fetchCommitteeData(
+  congress: number,
+  chamber: string
+): Promise<CommitteeApiResponse> {
+  const response = await fetch(
+    `https://api.propublica.org/congress/v1/${congress}/${chamber}/committees.json`,
+    {
+      headers: {
+        "X-API-Key": process.env.PRO_PUBLICA_API_KEY || "",
+      },
+    }
+  );
+  const committeeData: CommitteeApiResponse = await response.json();
+  return committeeData;
+}
 
 export default async function Committees() {
   const congress = 118; //needs to be dynamic , set to current
-
-  /** API Calls */
-  const responseSenateCommittees = await fetch(
-    `https://api.propublica.org/congress/v1/${congress}/senate/committees.json`,
-    {
-      headers: {
-        "X-API-Key": process.env.PRO_PUBLICA_API_KEY || "",
-      },
-    }
-  );
-
-  const senateCommitteeData: CommitteeApiResponse =
-    await responseSenateCommittees.json();
-
-  const senateCommittees: Committee[] =
-    getSenateCommittees(senateCommitteeData);
-
-  const responseHouseCommittees = await fetch(
-    `https://api.propublica.org/congress/v1/${congress}/house/committees.json`,
-    {
-      headers: {
-        "X-API-Key": process.env.PRO_PUBLICA_API_KEY || "",
-      },
-    }
-  );
-  const houseCommitteeData: CommitteeApiResponse =
-    await responseHouseCommittees.json();
-
-  const houseCommittees: Committee[] = getHouseCommittees(houseCommitteeData);
 
   return (
     <div className="container relative">
@@ -46,8 +33,12 @@ export default async function Committees() {
             </div>
           </div>
           <CommitteePageContent
-            senateCommittees={senateCommittees}
-            houseCommittees={houseCommittees}
+            senateCommittees={getCommittees(
+              await fetchCommitteeData(congress, "senate")
+            )}
+            houseCommittees={getCommittees(
+              await fetchCommitteeData(congress, "house")
+            )}
           />
         </div>
       </div>

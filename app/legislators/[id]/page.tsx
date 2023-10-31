@@ -17,23 +17,33 @@ interface Props {
   params: { id: string };
 }
 
-export default async function LegislatorInformation({ params }: Props) {
-  const response = await fetch(
-    `https://api.propublica.org/congress/v1/members/${params.id}.json`,
-    {
-      headers: {
-        "X-API-Key": process.env.PRO_PUBLICA_API_KEY || "",
-      },
-    }
-  );
+async function fetchData(url: string) {
+  const response = await fetch(url, {
+    headers: {
+      "X-API-Key": process.env.PRO_PUBLICA_API_KEY || "",
+    },
+  });
 
   if (!response.ok) {
-    // Handle non-successful responses here, e.g., log the status and throw an error.
     console.error(`API request failed with status ${response.status}`);
     throw new Error(`API request failed with status ${response.status}`);
   }
 
-  const memberData: IndividualMember = await response.json();
+  return response.json();
+}
+
+export default async function LegislatorInformation({ params }: Props) {
+  const congress = 118; // Set to the desired congress dynamically
+
+  const [memberData, billDatabyMember] = await Promise.all([
+    fetchData(
+      `https://api.propublica.org/congress/v1/members/${params.id}.json`
+    ),
+    fetchData(
+      `https://api.propublica.org/congress/v1/members/${params.id}/bills/passed.json`
+    ),
+  ]);
+
   const headerInfo = getHeaderInfo(memberData.results);
   const legislatorCommittees: CommitteeTableDataType[] = getCommitteeTableData(
     memberData.results[0].roles[0].committees
@@ -42,19 +52,7 @@ export default async function LegislatorInformation({ params }: Props) {
     getCommitteeTableData(memberData.results[0].roles[0].subcommittees);
   const votingData = getVotingBehaviorDataType(memberData.results[0].roles[0]);
 
-  const billResponse = await fetch(
-    `https://api.propublica.org/congress/v1/members/${memberData.results[0].id}/bills/passed.json`,
-    {
-      headers: {
-        "X-API-Key": process.env.PRO_PUBLICA_API_KEY || "",
-      },
-    }
-  );
-
-  const billDatabyMember: BillAPIResponse = await billResponse.json();
   const billsPassed = getBillsPassedByMember(billDatabyMember);
-
-  const sponsoredBillPassed: string = `Sponsored by ${headerInfo.name}`;
 
   return (
     <div className="container relative">

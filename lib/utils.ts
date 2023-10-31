@@ -600,10 +600,64 @@ export function getFundraisingSummaryPieChartData(
   return pieChartData;
 }
 
-export function getSenateCommittees(data: CommitteeApiResponse): Committee[] {
-  return data.results[0].committees;
+/**
+ * Get committees for senate and house
+ * @param data
+ * @returns
+ */
+export function getCommittees(
+  data: CommitteeApiResponse
+): CommitteeTableData[] {
+  const results: CommitteeTableData[] = [];
+  const congress = parseInt(data.results[0].congress);
+  const chamber = data.results[0].chamber;
+
+  data.results[0].committees.forEach((committee) => {
+    results.push({
+      id: committee.id,
+      congress: congress,
+      chamber: chamber,
+      committee_name: committee.name,
+      chair_name: committee.chair,
+      chair_party: committee.chair_party,
+    });
+  });
+  return results;
 }
 
-export function getHouseCommittees(data: CommitteeApiResponse): Committee[] {
-  return data.results[0].committees;
+/**
+ * Data used for Committee Header
+ * @param data
+ * @returns
+ */
+export function getCommitteeHeaderData(
+  data: CommitteeAPIResponse
+): CommitteeHeaderData {
+  return {
+    chamber: data.results[0].chamber,
+    name: data.results[0].name,
+    url: data.results[0].url,
+    chair: data.results[0].chair,
+    chair_party: data.results[0].chair_party,
+    chair_state: data.results[0].chair_state,
+  };
+}
+
+export function getCommitteeMembersTableData(
+  data: CommitteeMember[]
+): CommitteeMembersTableData[] {
+  const committeeMembersData: CommitteeMembersTableData[] = [];
+  data.forEach((member) => {
+    committeeMembersData.push({
+      id: member.id,
+      name: member.name,
+      party: member.party,
+      chamber: member.chamber,
+      side: member.side,
+      rank_in_party: member.rank_in_party,
+      state: member.state,
+      note: member.note,
+    });
+  });
+  return committeeMembersData;
 }
