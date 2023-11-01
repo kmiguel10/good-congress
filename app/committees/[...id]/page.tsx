@@ -5,7 +5,7 @@ import {
   getCommitteeHeaderData,
   getCommitteeMembersTableData,
 } from "@/lib/utils";
-import CommitteeMembersTable from "../components/committee-members-table.tsx/page";
+import CommitteeMembersTable from "../components/committee-members-table/committee-members-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import PartyTable from "@/app/components/party-table/page";
 

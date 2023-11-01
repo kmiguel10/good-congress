@@ -23,6 +23,6 @@
       "@/*": ["./*"]
     }
   },
-   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/committees/components/committee-members-table", "app/committees/components/committee-table"],
   "exclude": ["node_modules"]
 }
