@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
 import CommitteeHeader from "../components/committee-header";
 import {
+  getCommitteeCode,
   getCommitteeHeaderData,
   getCommitteeMembersTableData,
 } from "@/lib/utils";
@@ -12,14 +13,22 @@ import PartyTable from "@/app/components/party-table/page";
 export default async function Committee({
   params,
 }: {
-  params: { id: string; congress: number; chamber: string };
+  params: { id: string };
 }) {
   const id = params.id[0];
   const congress = params.id[1];
   const chamber = params.id[2];
+  // Decode committeeName
+  const committeeName = decodeURIComponent(params.id[3].substring(17))
+    .replace(/[\s,]+/g, "") // Remove spaces and commas
+    .toLowerCase(); // Convert to lowercase
 
-  console.log("TEST", id, congress, chamber);
+  console.log("TEST", id, congress, chamber, committeeName);
 
+  //get committee code from open secrets
+  const committeeCode = getCommitteeCode(chamber, committeeName);
+
+  console.log(committeeCode, "committee code");
   //the parameters are not working properly
   /** API Call */
   const responseIndivCommittee = await fetch(
@@ -46,6 +55,16 @@ export default async function Committee({
 
   //traverse cid array and use opensecrets api
   // return an object membersFundraising[]
+
+  //Provides summary fundraising information for a specific committee, industry and congress number
+  // const responsecongCmteIndus = await fetch(
+  //   `https://www.opensecrets.org/api/?method=congCmteIndus&congno=${congress}&indus=${industry}&cmte=${committeeCode}&apikey=${process.env.OPEN_SECRETS_API_KEY}d&output=json`,
+  //   {
+  //     headers: {
+  //       "X-API-Key": process.env.PRO_PUBLICA_API_KEY || "",
+  //     },
+  //   }
+  // );
 
   async function fetchMemberData(url: string): Promise<string> {
     const response = await fetch(url, {

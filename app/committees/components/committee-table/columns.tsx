@@ -14,7 +14,7 @@ export const columns: ColumnDef<CommitteeTableData>[] = [
       <Link
         className="underline decoration-sky-600 hover:text-purple-600"
         href="/committees/[...id]"
-        as={`/committees/${row.original.id}/${row.original.congress}/${row.original.chamber}`}
+        as={`/committees/${row.original.id}/${row.original.congress}/${row.original.chamber}/${row.original.committee_name}`}
       >
         {row.original.committee_name}
       </Link>

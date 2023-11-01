@@ -1,5 +1,10 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import {
+  congressCommitteeCodes,
+  jointCommitteeCodes,
+  senateCommitteeCodes,
+} from "../lib/constants/committee";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -660,4 +665,14 @@ export function getCommitteeMembersTableData(
     });
   });
   return committeeMembersData;
+}
+
+export function getCommitteeCode(chamber: string, committee: string): string {
+  if (chamber === "Senate") {
+    return senateCommitteeCodes[committee];
+  } else if (chamber === "House") {
+    return congressCommitteeCodes[committee];
+  } else {
+    return jointCommitteeCodes[committee];
+  }
 }
