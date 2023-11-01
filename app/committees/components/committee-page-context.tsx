@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import CommitteeTable from "./committee-table.tsx/page";
+import CommitteeTable from "./committee-table.tsx/committee-table";
 
 interface Props {
   senateCommittees: CommitteeTableData[];
