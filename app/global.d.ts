@@ -522,4 +522,41 @@ declare global {
     state: string;
     note: string | null;
   };
+
+  type congCmteIndusCommitteeMember = {
+    "@attributes": {
+      member_name: string;
+      cid: string;
+      party: string;
+      state: string;
+      total: string;
+      indivs: string;
+      pacs: string;
+    };
+  };
+
+  type congCmteIndusCommitteeInfo = {
+    "@attributes": {
+      committee_name: string;
+      industry: string;
+      congno: string;
+      origin: string;
+      source: string;
+      last_updated: string;
+    };
+    member: congCmteIndusCommitteeMember[];
+  };
+
+  type congCmteIndusCommitteeResponse = {
+    response: {
+      committee: congCmteIndusCommitteeInfo;
+    };
+  };
+
+  type committeeContributionsByIndustry = {
+    name: string;
+    total: number;
+    individual: number;
+    pacs: number;
+  };
 }

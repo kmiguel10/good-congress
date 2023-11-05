@@ -1,4 +1,4 @@
-const catorderArray: string[] = [
+export const industryCodes: string[] = [
   "A01",
   "A02",
   "A04",

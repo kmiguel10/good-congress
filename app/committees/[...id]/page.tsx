@@ -5,10 +5,12 @@ import {
   getCommitteeCode,
   getCommitteeHeaderData,
   getCommitteeMembersTableData,
+  getcommitteeContributionsByIndustry,
 } from "@/lib/utils";
 import CommitteeMembersTable from "../components/committee-members-table/committee-members-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import PartyTable from "@/app/components/party-table/page";
+import { industryCodes } from "@/lib/constants/committee";
 
 export default async function Committee({
   params,
@@ -57,14 +59,26 @@ export default async function Committee({
   // return an object membersFundraising[]
 
   //Provides summary fundraising information for a specific committee, industry and congress number
-  // const responsecongCmteIndus = await fetch(
-  //   `https://www.opensecrets.org/api/?method=congCmteIndus&congno=${congress}&indus=${industry}&cmte=${committeeCode}&apikey=${process.env.OPEN_SECRETS_API_KEY}d&output=json`,
-  //   {
-  //     headers: {
-  //       "X-API-Key": process.env.PRO_PUBLICA_API_KEY || "",
-  //     },
-  //   }
-  // );
+  /**
+   * Traverse industryCodes and run API ...
+   * run a function to get committeeContributionsByIndustry
+   *  store in committeeContributionsByIndustry[]
+   *
+   * project in a table
+   * @param url
+   * @returns
+   */
+
+  // const industryPromises = industryCodes.map(async (industryCode) => {
+  //   const responsecongCmteIndus = await fetch(
+  //     `https://www.opensecrets.org/api/?method=congCmteIndus&congno=${congress}&indus=${industryCode}&cmte=${committeeCode}&apikey=${process.env.OPEN_SECRETS_API_KEY}&output=json`
+  //   );
+  //   const dataCongCmteIndus = await responsecongCmteIndus.json();
+  //   return getcommitteeContributionsByIndustry(dataCongCmteIndus);
+  // });
+
+  // const industryData = await Promise.all(industryPromises);
+  // console.log(industryData);
 
   async function fetchMemberData(url: string): Promise<string> {
     const response = await fetch(url, {

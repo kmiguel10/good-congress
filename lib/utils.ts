@@ -667,6 +667,12 @@ export function getCommitteeMembersTableData(
   return committeeMembersData;
 }
 
+/**
+ * Get committee name from api.gov and code from opensecrets
+ * @param chamber
+ * @param committee
+ * @returns
+ */
 export function getCommitteeCode(chamber: string, committee: string): string {
   if (chamber === "Senate") {
     return senateCommitteeCodes[committee];
@@ -675,4 +681,25 @@ export function getCommitteeCode(chamber: string, committee: string): string {
   } else {
     return jointCommitteeCodes[committee];
   }
+}
+
+export function getcommitteeContributionsByIndustry(
+  data: congCmteIndusCommitteeResponse
+): committeeContributionsByIndustry {
+  const contributions: committeeContributionsByIndustry = {
+    name: "",
+    total: 0,
+    individual: 0,
+    pacs: 0,
+  };
+
+  contributions.name = data.response.committee["@attributes"].industry;
+
+  data.response.committee.member.forEach((mem) => {
+    contributions.total += parseInt(mem["@attributes"].total);
+    contributions.individual += parseInt(mem["@attributes"].indivs);
+    contributions.pacs += parseInt(mem["@attributes"].pacs);
+  });
+
+  return contributions;
 }
